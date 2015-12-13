@@ -31,7 +31,7 @@ var SampleApp = function() {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-            self.ipaddress = "127.0.0.1";
+            self.ipaddress = "localhost";
         };
     };
 
@@ -97,8 +97,8 @@ var SampleApp = function() {
     self.createRoutes = function() {
         self.routes = { };
 
-        self.app.use(express.static(__dirname + '/public'));
-		
+        // self.app.use(express.static(__dirname + '/public'));
+
 				require('./routes/sensor.js').init(self.app);
 				require('./routes/value.js').init(self.app);
     };
@@ -110,27 +110,31 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.app = express();
-			
-				self.app.set('view engine', 'ejs');
-				self.app.use(bodyParser.text());
-				self.app.use(bodyParser.json());
-				self.app.use(bodyParser.urlencoded({ extended: true }));
-				self.app.use(morgan('tiny'));
-			
-				// Openshift DB Name
-				var db_name = "udbs";
+        self.app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+        self.app.set('view engine', 'ejs');
+        self.app.use(bodyParser.text());
+        self.app.use(bodyParser.json());
+        self.app.use(bodyParser.urlencoded({ extended: true }));
+        self.app.use(morgan('tiny'));
 
-				// Provide a default for local development
-				mongodb_connection_string = 'mongodb://127.0.0.1:27017/' + db_name;
+        // Openshift DB Name
+        var db_name = "udbs";
 
-				// Take advantage of openshift env vars when available:
-				if (process.env.OPENSHIFT_MONGODB_DB_URL) {
-					mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + db_name;
-				}
+        // Provide a default for local development
+        mongodb_connection_string = 'mongodb://127.0.0.1:27017/' + db_name;
 
-				mongoose.connect(mongodb_connection_string);
-			
-				self.createRoutes();
+        // Take advantage of openshift env vars when available:
+        if (process.env.OPENSHIFT_MONGODB_DB_URL) {
+        mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + db_name;
+        }
+
+        mongoose.connect(mongodb_connection_string);
+
+        self.createRoutes();
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
