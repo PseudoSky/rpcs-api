@@ -45,6 +45,27 @@ exports.show = function (sensorID, callback) {
 
 }
 
+exports.insert = function (record, callback) {
+
+
+	var value = new Value({
+		sensorID: record.sensorID,
+		value: record.value
+	});
+
+	value.save(function (error) {
+		if (error) {
+			console.error(error);
+		}
+		if(callback){
+			callback();
+		}else{
+			return 1;
+		}
+	});
+
+}
+
 exports.create = function (sensorID, value, callback) {
 
 	var value = new Value({

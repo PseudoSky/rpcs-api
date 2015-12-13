@@ -11,8 +11,16 @@ exports.init = function (app) {
 	app.get("/values/since/:timestamp", getValuesSince);
 	app.get("/values/:sensorID?", getValues);
 	app.post("/values", postValue);
+	app.get("/seed",seed)
 
+}
+var seed = function(request,response){
+	var seed_data=require("../models/seed/data");
 
+	for(var i in seed_data){
+		values.insert(seed_data[i]);
+	}
+	response.send('Seeded')
 }
 var getValuesSince = function (request, response) {
 
