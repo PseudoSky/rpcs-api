@@ -2,7 +2,7 @@
 
 This is the server side package used for processing and serving sensor data between the hardware and Web Endpoint.
 
-![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/physical/hardware.png)
+![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/physical/hardware.jpg)
 
 ## References:
 
