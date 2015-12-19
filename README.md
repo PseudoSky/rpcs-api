@@ -2,7 +2,7 @@
 
 This is the server side package used for processing and serving sensor data between the hardware and Web Endpoint.
 
-![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/hardware.png)
+![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/physical/hardware.png)
 
 ## References:
 
@@ -51,6 +51,8 @@ This will add the test seed data that we gathered from the sensor to the MongoDB
 	app.get("/seed",seed)
 
 
+![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-since.png)
+![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values.png)
 
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-ch4.png)
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-co.png)
@@ -58,6 +60,4 @@ This will add the test seed data that we gathered from the sensor to the MongoDB
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-lpg.png)
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-lux.png)
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-p.png)
-![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-since.png)
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-t.png)
-![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values.png)
