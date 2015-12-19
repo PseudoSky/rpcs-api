@@ -54,60 +54,60 @@ This will add the test seed data that we gathered from the sensor to the MongoDB
 
 # API Endpoints
 
-### /seed
+### /seed  
 
 Endpoint for seeding the initial local database
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/seed.png)
 
-### /values
+### /values  
 
 Endpoint for all values from all sensors
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values.png)
 
-### /values/since/2015-12-14T14:07:41.939Z
+### /values/since/:timestamp  
 
 Endpoint for all sensor data after timestamp
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-since.png)
 
 Endpoint for butane sensor readings
 
-### /values/ch4
+### /values/ch4  
 
 Endpoint for methane
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-ch4.png)
 
-### /values/co
+### /values/co  
 
 Endpoint for carbon monoxide
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-co.png)
 
-### /values/h
+### /values/h  
 
 Endpoint for humidity
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-h.png)
 
-### /values/lpg
+### /values/lpg  
 
 Endpoint for butane/propane
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-lpg.png)
 
-### /values/lux
+### /values/lux  
 
 Endpoint for light intensity
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-lux.png)
 
-### /values/p
+### /values/p  
 
 Endpoint for atmospheric pressure
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-p.png)
 
 
-### /values/t
+### /values/t  
 
 Endpoint for temperature in Celcius
 ![](https://github.com/PseudoSky/udbs-air-sense/blob/master/docs/images/values-t.png)
 
-### /sensors
+### /sensors  
 
 Lists all sensors
 NOT YET IMPLEMENTED
