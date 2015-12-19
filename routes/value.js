@@ -16,11 +16,13 @@ exports.init = function (app) {
 }
 var seed = function(request,response){
 	var seed_data=require("../models/seed/data");
+	values.truncate(function(){
+		for(var i in seed_data){
+			values.insert(seed_data[i]);
+		}
+		response.send('Seeded')
+	})
 
-	for(var i in seed_data){
-		values.insert(seed_data[i]);
-	}
-	response.send('Seeded')
 }
 var getValuesSince = function (request, response) {
 
