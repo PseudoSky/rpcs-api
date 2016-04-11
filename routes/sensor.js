@@ -2,8 +2,22 @@ var sensors = require("../models/sensors.js");
 
 exports.init = function (app) {
 
+	app.get("/seed/sensors", seed);
 	app.get("/sensors/:sensorID?", getSensors);
 	app.post("/sensors", postSensor);
+	// app.get("/sensors", getAllSensor);
+
+}
+
+var seed = function(request,response){
+	var seed_sensors=require("../models/seed/sensors");
+	console.log('Sensor seeds',seed_sensors);
+	sensors.truncate(function(){
+		for(var i in seed_sensors){
+			sensors.insert(seed_sensors[i]);
+		}
+		response.send('Seeded')
+	})
 
 }
 

@@ -9,7 +9,6 @@ var Value = mongoose.model('Value', {
 /* Model Functions */
 
 exports.index = function (callback) {
-
 	Value.find(function (error, values) {
 		if (error) {
 			return console.error(error);
@@ -50,8 +49,6 @@ exports.truncate = function (callback){
 }
 
 exports.insert = function (record, callback) {
-
-
 	var value = new Value(record);
 	if(value.value!=0){
 		value.save(function (error) {
@@ -65,9 +62,6 @@ exports.insert = function (record, callback) {
 			}
 		});
 	}
-
-
-
 }
 
 exports.create = function (sensorID, value, callback) {

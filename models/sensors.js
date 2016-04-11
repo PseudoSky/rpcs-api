@@ -2,8 +2,9 @@
 
 var Sensor = mongoose.model('Sensor', {
 	name: String,
+	fullname:String,
 	description: String,
-	active: Boolean
+	active: {type:Boolean,default:true}
 });
 
 /* Model Functions */
@@ -50,4 +51,24 @@ exports.create = function (name, description, active, callback) {
 		callback();
 	});
 
+}
+
+exports.insert = function (record, callback) {
+	var value = new Sensor(record);
+	if(value.value!=0){
+		value.save(function (error) {
+			if (error) {
+				console.error(error);
+			}
+			if(callback){
+				callback();
+			}else{
+				return 1;
+			}
+		});
+	}
+}
+
+exports.truncate = function (callback){
+	Sensor.remove({},callback);
 }
