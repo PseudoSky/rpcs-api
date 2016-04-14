@@ -1,75 +1,145 @@
-var values = require("../models/values.js");
-
+var Value = require("../models/values.js");
+var u = require("../models/users.js");
+var User=mongoose.model('User'),
+			queryString = require('querystring');
+var default_user;
+console.log('User',User);
 /*
  * Export an init method that will define a set of routes
  * handled by this file.
  * @param app - The Express app
  */
-
-exports.init = function (app) {
-
-	app.get("/values/since/:timestamp", getValuesSince);
-	app.get("/values/:sensorID?", getValues);
-	app.post("/values", postValue);
-	app.get("/seed",seed)
-
-}
-var seed = function(request,response){
-	var seed_data=require("../models/seed/data");
-	values.truncate(function(){
-		for(var i in seed_data){
-			values.insert(seed_data[i]);
+function get_default(cb){
+	User.find({},function(err,u){
+		default_user=u._id;
+		console.log('U',err,u);
+		if (cb){
+			cb( default_user);
 		}
-		response.send('Seeded')
+	})
+}
+var seed_u=function(cb) {
+	var seed_user=require("../models/seed/users");
+	var u_t;
+	User.remove(function(){
+		User.create(seed_user,cb); 
+
+		
+	});
+	// body...
+}
+var seed = function(req,res){
+	User.count({},function(erroru,u_count){
+		if(u_count<1){
+
+		
+			var seed_data=require("../models/seed/data");
+			seed_u(function(err,userz){
+				console.log('EU',err,userz);
+				default_user=userz[0]._id;
+				// User.find().limit(1).exec(function(err,u){
+
+
+				// console.log(def,etc);
+				// body...
+				Value.model.count({},function(errorc,c){
+					if(c<10){
+						Value.truncate(function(){
+							for(var i in seed_data){
+								seed_data[i]["sensor_id"]=seed_data[i]["sensorID"];
+								seed_data[i]["user_id"]=default_user;
+								delete seed_data[i]["sensorID"];
+								
+							}
+							Value.model.create(seed_data,function(e,x){console.log('EX',e,x);});
+
+						})
+					}
+				})
+			});
+		}
 	})
 
 }
-var getValuesSince = function (request, response) {
+exports.init = function (app) {
 
-	if (request.params.timestamp != undefined) {
-		var ts=new Date(request.params.timestamp);
+	app.get("/values/since/:timestamp", getValuesSince);
+	app.get("/values/:sensor_id?", getValues);
+	app.post("/values", postValue);
+	app.get("/seed",seed)
+	app.get("/seed/users",seed_u)
+	if(app.locals.seed){
+		seed();
+	}
+
+}
+
+var getValuesSince = function (req, res) {
+	var opts=req.query;
+
+	opts['sort']={timestamp:-1};
+	opts['limit']=parseInt(req.params["limit"]||req.query.limit ||200)
+	if (req.params.timestamp != undefined) {
+		var ts=new Date(req.params.timestamp);
 		if(ts){
-			values.index_after(ts, function (values) {
-				response.send(values);
+			Value.index_after(ts,opts, function (values) {
+				res.send(values);
 			});
 
 		}else{
-			response.send('Invalid Timestamp')
+			res.send('Invalid Timestamp')
 		}
 
 	} else {
 
-		values.index(function(values) {
-			response.send(values);
+		Value.index(opts,function(values) {
+			res.send(values);
 		});
 	}
 
 }
 
-var getValues = function (request, response) {
+var getValues = function (req, res) {
+	var opts=req.query;
+	opts['sort']={timestamp:-1};
+	opts['limit']=parseInt(req.params["limit"]||req.query.limit ||200)
+	if (req.params.sensor_id != undefined) {
 
-	if (request.params.sensorID != undefined) {
-
-		values.show(request.params.sensorID, function (values) {
-			response.send(values);
+		Value.show(req.params.sensor_id, opts, function (values) {
+			res.send(values);
 		});
 
 	} else {
 
-		values.index(function(values) {
-			response.send(values);
+		Value.index(opts,function(values) {
+			res.send(values);
 		});
 	}
 
 }
 
-var postValue = function (request, response) {
+var postValue = function (req, res) {
+	console.log('Dat',req.query,req.body,req.params);
+	var sensor_id = req.query.sensor_id || req.body.sensor_id;
+	var user_id=req.query.user_id || req.body.user_id||default_user;
+	var value = req.query.value || req.body.value;
 
-	var sensorID = request.body.sensorID;
-	var value = request.body.value;
+	if(typeof value != typeof 0){
+		value=parseFloat(value)
+	}
 
-	values.create(sensorID, value, function () {
-		response.send("Added Value to the System");
+	Value.model.create({
+		user_id:user_id,
+		sensor_id: sensor_id,
+		value: value
+	}, function (err) {
+		res.status(200).send();
 	});
 
 }
+
+module.exports.seed=seed;
+module.exports.seed_u=seed_u;
+module.exports.post_vals=postValue;
+module.exports.values_since=getValuesSince;
+module.exports.values=getValues;

@@ -1,4 +1,15 @@
-[{
+[
+{
+	"name":"heart",
+	"fullname":"Heart Rate",
+	"description":"The amount of ambient light"
+	},
+{
+	"name":"meds",
+	"fullname":"Medication",
+	"description":"The amount of ambient light"
+	},
+{
 	"name":"lux",
 	"fullname":"Lumens",
 	"description":"The amount of ambient light"

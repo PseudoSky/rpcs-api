@@ -9,9 +9,9 @@ var Sensor = mongoose.model('Sensor', {
 
 /* Model Functions */
 
-exports.index = function (callback) {
+exports.index = function (opts,callback) {
 	
-	Sensor.find(function (error, sensors) {
+	Sensor.find({},{},opts,function (error, sensors) {
 		if (error) {
 			return console.error(error);
 		}
@@ -21,11 +21,11 @@ exports.index = function (callback) {
 
 }
 
-exports.show = function (name, callback) {
+exports.show = function (name,opts, callback) {
 	
 	Sensor.find({
 		name: name
-	}, function (error, sensors) {
+	},{},opts, function (error, sensors) {
 		if (error) {
 			return console.error(error);
 		}
@@ -35,15 +35,16 @@ exports.show = function (name, callback) {
 
 }
 
-exports.create = function (name, description, active, callback) {
+exports.create = function (name,fullname, description, active, callback) {
 
-	var sensor = new Sensor({
+	var s = new Sensor({
 		name: name,
+		fullname: fullname,
 		description: description,
 		active: active
 	});
 
-	sensor.save(function (error) {
+	s.save(function (error) {
 		if (error) {
 			console.error(error);
 		}
@@ -54,9 +55,9 @@ exports.create = function (name, description, active, callback) {
 }
 
 exports.insert = function (record, callback) {
-	var value = new Sensor(record);
-	if(value.value!=0){
-		value.save(function (error) {
+	var el = new Sensor(record);
+	if(el.name!=0){
+		el.save(function (error) {
 			if (error) {
 				console.error(error);
 			}

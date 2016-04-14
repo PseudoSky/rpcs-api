@@ -41,16 +41,21 @@ node server.js
 
 ## Use:
 
-Open a browser and go to http://localhost:50000/seed
+Check out the examples in `examples` dir
+
+On first run, the db should generate seed data.
 This will add the test seed data that we gathered from the sensor to the MongoDB instance.
 
-
+	app.get("/sensors/:sensorID?", getSensors);
+	app.post("/sensors", postSensor);
 
 	app.get("/values/since/:timestamp", getValuesSince);
-	app.get("/values/:sensorID?", getValues);
+	app.get("/values/:sensor_id?", getValues);
 	app.post("/values", postValue);
-	app.get("/seed",seed)
 
+	app.get("/users/values/since/:timestamp", getUsersSince);
+	app.get("/users/values/:user_id?", getV4U);
+	app.get("/users/:user_id?",getUsers)
 
 # API Endpoints
 

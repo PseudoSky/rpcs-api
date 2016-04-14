@@ -1,15 +1,19 @@
 /* Value Class Declaration */
+Schema = mongoose.Schema
 
 var Value = mongoose.model('Value', {
-	sensorID: String,
+	sensor_id: String,
+	user_id:{ type: Schema.ObjectId, ref:'User' },
 	timestamp: { type : Date, default: Date.now },
 	value: Number
 });
-
+exports.model=Value;
 /* Model Functions */
 
-exports.index = function (callback) {
-	Value.find(function (error, values) {
+exports.index = function (opts,callback) {
+	console.log('OPTS',opts);
+	opts=opts || {sort:{timestamp:-1},limit:200}
+	Value.find({},{},opts,function (error, values) {
 		if (error) {
 			return console.error(error);
 		}
@@ -18,9 +22,9 @@ exports.index = function (callback) {
 	}).select('-__v -_id');
 
 }
-exports.index_after = function (timestamp, callback) {
+exports.index_after = function (timestamp,opts, callback) {
 
-	Value.find(function (error, values) {
+	Value.find({},{},opts,function (error, values) {
 		if (error) {
 			return console.error(error);
 		}
@@ -30,17 +34,17 @@ exports.index_after = function (timestamp, callback) {
 
 }
 
-exports.show = function (sensorID, callback) {
+exports.show = function (sensor_id, opts, callback) {
 
 	Value.find({
-		sensorID: sensorID
-	}, function (error, values) {
+		sensor_id: sensor_id
+	},{},opts, function (error, values) {
 		if (error) {
 			return console.error(error);
 		}
 
 		callback(values);
-	}).select('-__v -_id -sensorID');
+	}).select('-__v -_id -sensor_id');
 
 }
 
@@ -49,6 +53,11 @@ exports.truncate = function (callback){
 }
 
 exports.insert = function (record, callback) {
+	console.log('R',record);
+	if(!record.user_id){
+		// record.user_id=default_user;
+		console.log('NO USER');
+	}
 	var value = new Value(record);
 	if(value.value!=0){
 		value.save(function (error) {
@@ -64,10 +73,11 @@ exports.insert = function (record, callback) {
 	}
 }
 
-exports.create = function (sensorID, value, callback) {
+exports.create = function (sensor_id, user_id,value, callback) {
 
 	var value = new Value({
-		sensorID: sensorID,
+		user_id:user_id,
+		sensor_id: sensor_id,
 		value: value
 	});
 

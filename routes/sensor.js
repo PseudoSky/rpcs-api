@@ -3,50 +3,53 @@ var sensors = require("../models/sensors.js");
 exports.init = function (app) {
 
 	app.get("/seed/sensors", seed);
-	app.get("/sensors/:sensorID?", getSensors);
+	app.get("/sensors/:sensor_id?", getSensors);
 	app.post("/sensors", postSensor);
 	// app.get("/sensors", getAllSensor);
 
 }
 
-var seed = function(request,response){
+var seed = function(req,res){
 	var seed_sensors=require("../models/seed/sensors");
 	console.log('Sensor seeds',seed_sensors);
 	sensors.truncate(function(){
 		for(var i in seed_sensors){
 			sensors.insert(seed_sensors[i]);
 		}
-		response.send('Seeded')
+		res.send('Seeded')
 	})
 
 }
 
-var getSensors = function (request, response) {
-
-	if (request.params.sensorID != undefined) {
+var getSensors = function (req, res) {
+	var opts=req.query;
+	opts['sort']={name:1};
+	opts['limit']=parseInt(req.params["limit"]||req.query.limit ||20)
+	if (req.params.sensorID != undefined) {
 		
-		sensors.show(request.params.sensorID, function (sensors) {
-			response.send(sensors);
+		sensors.show(req.params.sensorID,opts, function (sensors) {
+			res.send(sensors);
 		});
 		
 	} else {
 		
-		sensors.index(function (sensors) {
-			response.send(sensors);
+		sensors.index(opts,function (sensors) {
+			res.send(sensors);
 		});
 		
 	}
 
 }
 
-var postSensor = function (request, response) {
+var postSensor = function (req, res) {
 
-	var name = request.body.name;
-	var description = request.body.description;
-	var active = request.body.active;
+	var name = req.body.name||req.query.name;
+	var fullname = req.body.fullname||req.query.fullname;
+	var description = req.body.description||req.query.description;
+	var active = req.body.active||req.query.active;
 	
-	sensors.create(name, description, active, function () {
-		response.send("Added Sensor to the System");
+	sensors.create(name, fullname,description, active, function () {
+		res.send("Added Sensor to the System");
 	});
 
 }

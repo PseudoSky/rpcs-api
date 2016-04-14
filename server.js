@@ -24,6 +24,7 @@ var SampleApp = function() {
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
+        self.seed = process.env.SEED || true;
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || 50000;
 
@@ -31,7 +32,7 @@ var SampleApp = function() {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-            self.ipaddress = "localhost";
+            self.ipaddress = "0.0.0.0";
         };
     };
 
@@ -98,7 +99,7 @@ var SampleApp = function() {
         self.routes = { };
 
         // self.app.use(express.static(__dirname + '/public'));
-
+                require('./routes/user.js').init(self.app);
 				require('./routes/sensor.js').init(self.app);
 				require('./routes/value.js').init(self.app);
     };
@@ -115,6 +116,7 @@ var SampleApp = function() {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
+        self.app.locals.seed=self.seed;
         self.app.set('view engine', 'ejs');
         self.app.use(bodyParser.text());
         self.app.use(bodyParser.json());
