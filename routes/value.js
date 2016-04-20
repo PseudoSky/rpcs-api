@@ -83,17 +83,17 @@ var getValuesSince = function (req, res) {
 		var ts=new Date(req.params.timestamp);
 		if(ts){
 			Value.index_after(ts,opts, function (values) {
-				res.send(values);
+				res.status(200).send(values);
 			});
 
 		}else{
-			res.send('Invalid Timestamp')
+			res.status(400).send({"message":"Invalid Timestamp"});
 		}
 
 	} else {
 
 		Value.index(opts,function(values) {
-			res.send(values);
+			res.status(200).send(values);
 		});
 	}
 
@@ -106,13 +106,13 @@ var getValues = function (req, res) {
 	if (req.params.sensor_id != undefined) {
 
 		Value.show(req.params.sensor_id, opts, function (values) {
-			res.send(values);
+			res.status(200).send(values);
 		});
 
 	} else {
 
 		Value.index(opts,function(values) {
-			res.send(values);
+			res.status(200).send(values);
 		});
 	}
 
@@ -133,7 +133,10 @@ var postValue = function (req, res) {
 		sensor_id: sensor_id,
 		value: value
 	}, function (err) {
-		res.status(200).send();
+		if(err) res.status(400).send({"message":"error in value post email sky"});
+		else{
+			res.status(200).send({});
+		}
 	});
 
 }

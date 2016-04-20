@@ -23,7 +23,7 @@ var seed = function(req,res){
 		for(var i in seed_data){
 			users.insert(seed_data[i]);
 		}
-		res.send('Seeded')
+		res.status(200).send({"message":'Seeded'})
 	})
 
 }
@@ -35,17 +35,17 @@ var getUsersSince = function (req, res) {
 		var ts=new Date(req.params.timestamp);
 		if(ts){
 			users.index_after(ts,opts, function (users) {
-				res.send(users);
+				res.status(200).send(users);
 			});
 
 		}else{
-			res.send('Invalid Timestamp')
+			res.status(400).send({"message":'Invalid Timestamp'})
 		}
 
 	} else {
 
 		users.index(opts,function(users) {
-			res.send(users);
+			res.status(200).send(users);
 		});
 	}
 
@@ -59,13 +59,13 @@ var getUsers = function (req, res) {
 	if (req.params.user_id != undefined) {
 
 		users.show(req.params.user_id,opts, function (users) {
-			res.send(users);
+			res.status(200).send(users);
 		});
 
 	} else {
 
 		users.index(opts,function(users) {
-			res.send(users);
+			res.status(200).send(users);
 		});
 	}
 
@@ -80,11 +80,12 @@ var getV4U = function(req,res){
 
 	var user_id = req.body.user_id||req.query.user_id||req.params.user_id;
 	
-	if(!user_id)res.status(400).send('No user id present');
+	if(!user_id)if(err)res.status(400).send({"message":"no user id"});
+
 
 	Values.find( {"user_id":user_id}, {}, opts, function(err,dat){
-		if(err)res.status(400).send(err);
-		res.send(dat);
+		if(err)res.status(400).send({"message":"error in post","error":err});
+		res.status(200).send(dat);
 	});
 }
 
@@ -93,8 +94,9 @@ var postUser = function (req, res) {
 	// var user_id = req.body.user_id||req.query.user_id;
 	// var value = req.body.value||req.query.user_id;
 	console.log('B',req.body);
-	User.create(req.body, function () {
-		res.send("Added User to the System");
+	User.create(req.body, function (err,user) {
+		if(err)res.status(400).send({"message":"error in post","error":err});
+		res.status(200).send({"data":user,"message":"Added User to the System"});
 	});
 
 }

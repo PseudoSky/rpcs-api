@@ -25,16 +25,22 @@ var getSensors = function (req, res) {
 	var opts=req.query;
 	opts['sort']={name:1};
 	opts['limit']=parseInt(req.params["limit"]||req.query.limit ||20)
-	if (req.params.sensorID != undefined) {
+	if (req.params.sensor_id != undefined) {
 		
-		sensors.show(req.params.sensorID,opts, function (sensors) {
-			res.send(sensors);
+		sensors.show(req.params.sensor_id,opts, function (sensors) {
+			if(!sensors)res.status(400).send({"message":"sensors"});
+			else{
+				res.status(200).send(sensors);
+			}
 		});
 		
 	} else {
 		
 		sensors.index(opts,function (sensors) {
-			res.send(sensors);
+			if(!sensors)res.status(400).send({"message":"sensors"});
+			else{
+				res.status(200).send(sensors);
+			}
 		});
 		
 	}
@@ -49,7 +55,8 @@ var postSensor = function (req, res) {
 	var active = req.body.active||req.query.active;
 	
 	sensors.create(name, fullname,description, active, function () {
-		res.send("Added Sensor to the System");
+		res.status(200).send({"message":"Added Sensor to the System"});
+
 	});
 
 }
