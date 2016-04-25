@@ -3,10 +3,21 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User', {
 	first:String,
 	last:String,
-	phone:String,
-	address:String,
+	gender:String,
+	dob:String,
+	phone :String,
+	mobile:String,
+	email:String,
+	address1:String,
+	address2:String,
+	city:String,
+	state:String,
+	zipcode:String,
 	timestamp: { type : Date, default: Date.now }
 });
+
+
+
 exports.model=User;
 /* Model Functions */
 

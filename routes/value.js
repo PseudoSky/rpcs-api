@@ -66,6 +66,7 @@ exports.init = function (app) {
 	app.get("/values/since/:timestamp", getValuesSince);
 	app.get("/values/:sensor_id?", getValues);
 	app.post("/values", postValue);
+	app.post("/estimote", postEstimote);
 	app.get("/seed",seed)
 	app.get("/seed/users",seed_u)
 	if(app.locals.seed){
@@ -139,6 +140,24 @@ var postValue = function (req, res) {
 		}
 	});
 
+}
+
+var postEstimote=function(req, res){
+	console.log('Dat',req.query,req.body,req.params);
+	var sensor_id = "estimote";
+	var user_id=req.query.user_id || req.body.user_id||default_user;
+	var meta = req.body || req.query;
+
+	Value.model.create({
+		user_id:user_id,
+		sensor_id: sensor_id,
+		meta:meta
+	}, function (err,v) {
+		if(err) res.status(400).send({"message":"error in value post email sky"});
+		else{
+			res.status(200).send(v);
+		}
+	});
 }
 
 module.exports.seed=seed;

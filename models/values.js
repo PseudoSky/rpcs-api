@@ -5,6 +5,7 @@ var Value = mongoose.model('Value', {
 	sensor_id: String,
 	user_id:{ type: Schema.ObjectId, ref:'User' },
 	timestamp: { type : Date, default: Date.now },
+	meta: Object,
 	value: Number
 });
 exports.model=Value;
